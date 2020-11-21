@@ -6,20 +6,21 @@ from PyQt5.QtCore import QThread
 
 from Motion_Map.motionData import *
 from Object_Tracker.ObjectTracker import TrackUI
-from Main_Window.MainWindow import Ui_MainWindow
 from Spot_The_Diff import SpotTheDiff
+
 
 class AThread(QThread):
     port = ""
     usbStatus = "Disconnected"
     arduino = None
+
     def run(self):
         global port
         global usbStatus
         global arduino
         # print("RUNNING")
         arduinoData = motorTypeData + motorSpeedData + motorDirData + str(
-       SpotTheDiff.differences) + str(TrackUI.angle).zfill(3)
+            SpotTheDiff.differences) + str(TrackUI.angle).zfill(3)
         print(str(TrackUI.angle))
         differences = 0
 
@@ -46,16 +47,18 @@ class AThread(QThread):
                         # and 9600 is the baud rate
                         time.sleep(1)
 
+        from Main_Window.Main import mainUI
+
         try:
             incoming = arduino.readline()  # read the sensor data coming from the arduino
             incoming = incoming.decode()
             incoming = incoming.split()
             # print(incoming)
-            Ui_MainWindow.voltmeter.setText("Voltmeter: " + incoming[0])
-            Ui_MainWindow.current.setText("Current sensor: " + incoming[1])
-            Ui_MainWindow.leakage.setText("Leakage sensor: " + incoming[2])
+            mainUI.voltmeter.setText("Voltmeter: " + incoming[0])
+            mainUI.current.setText("Current sensor: " + incoming[1])
+            mainUI.leakage.setText("Leakage sensor: " + incoming[2])
         except:
             # print("Serial error - sensor values")
             pass
 
-        Ui_MainWindow.usbConnectedLabel.setText("USB status: " + usbStatus)
+        mainUI.usbConnectedLabel.setText("USB status: " + usbStatus)

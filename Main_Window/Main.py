@@ -6,7 +6,6 @@ from PyQt5 import QtWidgets
 # ---------------------------------------------------------------Constants-----------------------------------------------------------------
 from Main_Window.MainWindow import Ui_MainWindow
 from Object_Tracker.ObjectTracker import TrackUI
-from Serial.SerialCommunication import AThread
 from Spot_The_Diff.SpotTheDiffGUI import Ui_DifferencesWindow
 from Motion_Map.motionMapGUI import Ui_MotionMapWindow
 
@@ -20,6 +19,7 @@ if __name__ == "__main__":
     diffUI.setupUi()
     motionUI = Ui_MotionMapWindow()
     motionUI.setupUi()
+    from Serial.SerialCommunication import AThread
     thread = AThread()
     thread.finished.connect(thread.run)
     thread.finished.connect(thread.start)

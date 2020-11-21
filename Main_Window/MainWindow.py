@@ -1,4 +1,3 @@
-import cv2
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import *
@@ -7,6 +6,7 @@ from Main_Window.Timer import *
 from Main_Window.LiveFeed import *
 
 class Ui_MainWindow(QMainWindow):
+
     def setupUi(self):
         self.setWindowTitle("MainWindow")
         self.setObjectName("MainWindow")
@@ -79,13 +79,27 @@ class Ui_MainWindow(QMainWindow):
         self.start.clicked.connect(readTimer)
         self.timer = QTimer()
         self.timer.timeout.connect(setTimer)
-        self.screenshot.clicked.connect(save)
+        self.screenshot.clicked.connect(self.save)
         self.stop.clicked.connect(stopFun)
         self.pause.clicked.connect(pauseFun)
         self.camera.setScaledContents(True)
-        self.cap = cv2.VideoCapture(0)
         self.timer1 = QTimer()
-        self.timer1.timeout.connect(showCamera)
+        self.timer1.timeout.connect(self.showCamera)
         self.timer1.start(20)
         self.startTimer = True
         QtCore.QMetaObject.connectSlotsByName(self)
+    def showCamera(self):
+        self.cap = cv2.VideoCapture(0)
+        _, self.img = self.cap.read()
+        frame = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+        height, width, channel = frame.shape
+        step = channel * width
+        qImg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
+        self.camera.setPixmap(QtGui.QPixmap.fromImage(qImg))
+        cv2.waitKey(20)
+
+    # Save a snapshot of the live feed
+    def save(self):
+        savedframe = self.img
+        name, _ = QFileDialog.getSaveFileName()
+        cv2.imwrite(name + ".png", savedframe)
