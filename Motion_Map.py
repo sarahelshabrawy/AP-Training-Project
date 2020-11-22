@@ -164,7 +164,6 @@ class Ui_MotionMapWindow(QMainWindow):
         H_KEY = 72
         C_KEY = 67
         S_KEY = 83
-        print(self.x)
 
         if self.x > 520 or self.x < 0 or self.y < 0 or self.y > 500:
             if self.x < 0:

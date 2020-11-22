@@ -8,20 +8,20 @@ class TrackUI:
 
     def setup(self):
         def findBestCircle(cnt):
-            global angle
             # finds out the best circle according to circularity
-            max = 0.8
-            maxCnt = cnt[0]
+            max_circularity = 0.8
+            max_cnt = cnt[0]
             for c in cnt[0]:
-                r = c[2]
-                area = 3.14 * r * r
-                perimeter = 2 * 3.14 * r
+                radius = c[2]
+                area = 3.14 * radius * radius
+                perimeter = 2 * 3.14 * radius
                 circularity = 4 * 3.14 * area / (perimeter * perimeter)
-                if circularity > max:
-                    max = circularity
-                    maxCnt = c
-            return maxCnt
+                if 1 < circularity < max_circularity:
+                    max_circularity = circularity
+                    max_cnt = c
+            return max_cnt
 
+        global angle
         detected = False
         boundingBox = (0.0, 0.0, 0.0, 0.0)
         tracker = cv2.TrackerMOSSE_create()
